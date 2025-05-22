@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuyển Tập Bài Tập Lập Trình</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Visualization & Content Choices:
+    - Bài 1: Tra Cứu Điểm Sinh Viên -> Goal: Inform -> Presentation: Structured HTML text (headings, paragraphs, pre/code blocks for examples, code tags for variables) -> Interaction: Select from navigation tabs to display content -> Justification: Clear and standard presentation method for textual problem statements.
+    - Bài 2: Kiểm Tra Cặp Thẻ HTML Đơn Giản -> Goal: Inform -> Presentation: Structured HTML text (with code tags for HTML examples) -> Interaction: Select from navigation -> Justification: Clear presentation.
+    - Bài 3: Sắp Xếp Sản Phẩm -> Goal: Inform -> Presentation: Structured HTML text (with code tags for variables) -> Interaction: Select from navigation -> Justification: Clear presentation.
+    - Bài 4: Xác Thực Địa Chỉ Email -> Goal: Inform -> Presentation: Structured HTML text (with code tags for email components and variables) -> Interaction: Select from navigation -> Justification: Clear presentation.
+    No charts or complex data visualizations are required as the source material consists of textual programming challenges. Interactions are focused on navigating between different problem descriptions.
+    Library/Method: Vanilla JavaScript for DOM manipulation (content switching) and event handling. Tailwind CSS for all styling and layout.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif; /* Using Inter as a common, clean font */
+        }
+        .tab-active {
+            border-bottom-width: 2px;
+        }
+        pre::-webkit-scrollbar {
+            height: 8px;
+        }
+        pre::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        pre::-webkit-scrollbar-thumb {
+            background: #a7a7a7;
+            border-radius: 10px;
+        }
+        pre::-webkit-scrollbar-thumb:hover {
+            background: #8f8f8f;
+        }
+        #exerciseContent code:not(pre code) { /* Style for inline code, not code within pre */
+            background-color: #e7e5e4; /* stone-200 */
+            color: #0f766e; /* teal-700 */
+            padding: 0.1em 0.3em;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    </style>
+</head>
+<body class="bg-stone-100 text-stone-800 antialiased">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-5xl">
+        <header class="mb-6 text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-teal-700">Tuyển Tập Bài Tập Lập Trình</h1>
+            <p class="mt-2 text-stone-600 text-sm sm:text-base">
+                Chào mừng bạn đến với tuyển tập các bài tập lập trình. Chọn một bài tập từ thanh điều hướng bên dưới để xem chi tiết yêu cầu, định dạng và ví dụ. Các bài tập này được thiết kế để giúp bạn rèn luyện kỹ năng giải quyết vấn đề và lập trình.
+            </p>
+        </header>
+
+        <nav id="exerciseNavigation" class="mb-6 sm:mb-8 bg-stone-50 rounded-lg shadow p-2">
+            <ul class="flex flex-wrap justify-center gap-2 sm:gap-3">
+            </ul>
+        </nav>
+
+        <main id="exerciseContent" class="bg-white p-4 sm:p-6 rounded-lg shadow-lg min-h-[400px]">
+            <p class="text-center text-stone-500">Vui lòng chọn một bài tập để xem nội dung.</p>
+        </main>
+
+        <footer class="mt-8 text-center text-sm text-stone-500">
+            <p>&copy; 2025 Tuyển Tập Bài Tập Lập Trình.</p>
+        </footer>
+    </div>
+
+    <script>
+        const exercises = [
+            {
+                id: "bai1",
+                title: "Bài 1: Tra Cứu Điểm Sinh Viên",
+                content: `
+                    <h2 class="text-2xl font-semibold text-teal-700 mb-4">Tra Cứu Điểm Sinh Viên</h2>
+                    <div class="space-y-5">
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Yêu cầu</h3>
+                            <p class="text-stone-600">Cho một danh sách gồm Mã số sinh viên (MSSV) và điểm số tương ứng của họ. Bạn hãy viết chương trình để in ra điểm số dựa vào MSSV được chỉ định trong các truy vấn.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Định dạng đầu vào</h3>
+                            <ul class="list-disc list-inside text-stone-600 space-y-1 pl-2">
+                                <li>Dòng đầu tiên chứa một số nguyên <code>n</code>, biểu thị số lượng sinh viên trong danh sách.</li>
+                                <li><code>n</code> khối tiếp theo, mỗi khối gồm 2 dòng:
+                                    <ul class="list-circle list-inside ml-4 space-y-1 pl-2">
+                                        <li>Dòng thứ nhất: MSSV (một chuỗi ký tự và số, không có khoảng trắng).</li>
+                                        <li>Dòng thứ hai: Điểm số (một số thực).</li>
+                                    </ul>
+                                </li>
+                                <li>Sau đó là các dòng truy vấn, mỗi dòng chứa một MSSV cần tra cứu. Quá trình nhập truy vấn kết thúc khi gặp dòng "END".</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Điều kiện</h3>
+                            <ul class="list-disc list-inside text-stone-600 space-y-1 pl-2">
+                                <li><code>1 ≤ n ≤ 50000</code></li>
+                                <li>MSSV có độ dài từ 5 đến 10 ký tự.</li>
+                                <li>Điểm số nằm trong khoảng từ <code>0.0</code> đến <code>10.0</code>.</li>
+                                <li><code>1 ≤ Số lượng truy vấn ≤ 50000</code></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Định dạng đầu ra</h3>
+                            <ul class="list-disc list-inside text-stone-600 space-y-1 pl-2">
+                                <li>Đối với mỗi truy vấn, hiển thị MSSV và điểm số tương ứng theo định dạng: <code>MSSV=ĐiểmSố</code>.</li>
+                                <li>Nếu không tìm thấy MSSV trong danh sách, hiển thị <code>Không tìm thấy</code>.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Ví dụ</h3>
+                            <p class="text-stone-600 mb-1"><em>Đầu vào:</em></p>
+                            <pre class="bg-stone-200 p-3 rounded-md overflow-x-auto text-sm"><code class="language-text">3
+B17DCCN123
+8.5
+B18DCCN456
+7.0
+B19DCCN789
+9.2
+B17DCCN123
+B20DCCN000
+B18DCCN456
+END</code></pre>
+                            <p class="text-stone-600 mt-2 mb-1"><em>Đầu ra:</em></p>
+                            <pre class="bg-stone-200 p-3 rounded-md overflow-x-auto text-sm"><code class="language-text">B17DCCN123=8.5
+Không tìm thấy
+B18DCCN456=7.0</code></pre>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: "bai2",
+                title: "Bài 2: Kiểm Tra Cặp Thẻ HTML",
+                content: `
+                    <h2 class="text-2xl font-semibold text-teal-700 mb-4">Kiểm Tra Cặp Thẻ HTML Đơn Giản</h2>
+                    <div class="space-y-5">
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Yêu cầu</h3>
+                            <p class="text-stone-600">Trong một chuỗi HTML đơn giản, các thẻ được biểu diễn dưới dạng <code>&lt;tên_thẻ&gt;</code> cho thẻ mở và <code>&lt;/tên_thẻ&gt;</code> cho thẻ đóng. Một chuỗi HTML đơn giản được coi là "hợp lệ" nếu tất cả các thẻ mở đều có thẻ đóng tương ứng và đúng thứ tự (tương tự như quy tắc của dấu ngoặc). Chỉ xét các thẻ đơn giản không có thuộc tính.</p>
+                            <p class="text-stone-600 mt-1">Ví dụ:</p>
+                            <ul class="list-disc list-inside text-stone-600 space-y-1 pl-2">
+                                <li><code>&lt;b&gt;&lt;i&gt;Hello&lt;/i&gt;&lt;/b&gt;</code> là hợp lệ.</li>
+                                <li><code>&lt;b&gt;&lt;i&gt;Hello&lt;/b&gt;&lt;/i&gt;</code> là không hợp lệ.</li>
+                                <li><code>&lt;a&gt;&lt;b&gt;&lt;/a&gt;&lt;/b&gt;</code> là không hợp lệ.</li>
+                                <li><code>&lt;html&gt;&lt;body&gt;&lt;p&gt;Text&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</code> là hợp lệ.</li>
+                            </ul>
+                             <p class="text-stone-600 mt-1">Cho một chuỗi HTML đơn giản, bạn hãy xác định xem chuỗi đó có hợp lệ hay không.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Định dạng đầu vào</h3>
+                            <p class="text-stone-600">Đầu vào bao gồm nhiều dòng, mỗi dòng biểu diễn một chuỗi HTML đơn giản không rỗng. Việc nhập liệu kết thúc khi gặp dòng "EOF".</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Điều kiện</h3>
+                            <ul class="list-disc list-inside text-stone-600 space-y-1 pl-2">
+                                <li>Tên thẻ chỉ chứa các ký tự chữ cái tiếng Anh viết thường (ví dụ: <code>p</code>, <code>div</code>, <code>span</code>).</li>
+                                <li>Độ dài mỗi chuỗi HTML từ 1 đến 255 ký tự.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Định dạng đầu ra</h3>
+                            <p class="text-stone-600">Đối với mỗi chuỗi đầu vào, hiển thị <code>Hợp lệ</code> hoặc <code>Không hợp lệ</code>.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Ví dụ</h3>
+                            <p class="text-stone-600 mb-1"><em>Đầu vào:</em></p>
+                            <pre class="bg-stone-200 p-3 rounded-md overflow-x-auto text-sm"><code class="language-text">&lt;b&gt;&lt;i&gt;World&lt;/i&gt;&lt;/b&gt;
+&lt;p&gt;Hello&lt;b&gt;World&lt;/p&gt;&lt;/b&gt;
+&lt;div&gt;Text&lt;/div&gt;&lt;p&gt;&lt;/p&gt;
+EOF</code></pre>
+                            <p class="text-stone-600 mt-2 mb-1"><em>Đầu ra:</em></p>
+                            <pre class="bg-stone-200 p-3 rounded-md overflow-x-auto text-sm"><code class="language-text">Hợp lệ
+Không hợp lệ
+Hợp lệ</code></pre>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: "bai3",
+                title: "Bài 3: Sắp Xếp Sản Phẩm",
+                content: `
+                    <h2 class="text-2xl font-semibold text-teal-700 mb-4">Sắp Xếp Sản Phẩm</h2>
+                    <div class="space-y-5">
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Yêu cầu</h3>
+                            <p class="text-stone-600">Cho danh sách thông tin các sản phẩm bao gồm: Tên sản phẩm, Giá bán và Đánh giá (từ 1 đến 5 sao). Bạn hãy sắp xếp danh sách này theo các tiêu chí sau:</p>
+                            <ol class="list-decimal list-inside text-stone-600 space-y-1 pl-2">
+                                <li>Đánh giá giảm dần.</li>
+                                <li>Nếu hai sản phẩm có cùng Đánh giá, sắp xếp theo Giá bán tăng dần.</li>
+                                <li>Nếu vẫn còn trùng (cùng Đánh giá và Giá bán), sắp xếp theo Tên sản phẩm theo thứ tự từ điển (A-Z).</li>
+                            </ol>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Định dạng đầu vào</h3>
+                            <ul class="list-disc list-inside text-stone-600 space-y-1 pl-2">
+                                <li>Dòng đầu tiên chứa số nguyên <code>N</code>, là số lượng sản phẩm.</li>
+                                <li><code>N</code> dòng tiếp theo, mỗi dòng chứa thông tin một sản phẩm theo định dạng: <code>TênSảnPhẩm GiáBán ĐánhGiá</code>
+                                    <ul class="list-circle list-inside ml-4 space-y-1 pl-2">
+                                        <li><code>TênSảnPhẩm</code>: chuỗi ký tự, có thể chứa khoảng trắng.</li>
+                                        <li><code>GiáBán</code>: số nguyên.</li>
+                                        <li><code>ĐánhGiá</code>: số nguyên (từ 1 đến 5).</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Điều kiện</h3>
+                            <ul class="list-disc list-inside text-stone-600 space-y-1 pl-2">
+                                <li><code>1 ≤ N ≤ 1000</code></li>
+                                <li>Độ dài Tên sản phẩm từ 1 đến 50 ký tự.</li>
+                                <li><code>1000 ≤ GiáBán ≤ 100000000</code></li>
+                                <li><code>1 ≤ ĐánhGiá ≤ 5</code></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Định dạng đầu ra</h3>
+                            <p class="text-stone-600">Hiển thị tên của các sản phẩm đã được sắp xếp, mỗi tên trên một dòng riêng biệt.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Ví dụ</h3>
+                            <p class="text-stone-600 mb-1"><em>Đầu vào:</em></p>
+                            <pre class="bg-stone-200 p-3 rounded-md overflow-x-auto text-sm"><code class="language-text">5
+Laptop A 25000000 5
+Chuột B 350000 4
+Bàn phím C 700000 4
+Laptop D 22000000 5
+Màn hình E 5000000 5</code></pre>
+                            <p class="text-stone-600 mt-2 mb-1"><em>Đầu ra:</em></p>
+                            <pre class="bg-stone-200 p-3 rounded-md overflow-x-auto text-sm"><code class="language-text">Laptop D
+Màn hình E
+Laptop A
+Chuột B
+Bàn phím C</code></pre>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: "bai4",
+                title: "Bài 4: Xác Thực Địa Chỉ Email",
+                content: `
+                    <h2 class="text-2xl font-semibold text-teal-700 mb-4">Xác Thực Địa Chỉ Email</h2>
+                    <div class="space-y-5">
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Yêu cầu</h3>
+                            <p class="text-stone-600">Một địa chỉ email hợp lệ cần tuân theo các quy tắc cơ bản sau (đây là phiên bản đơn giản hóa):</p>
+                            <ol class="list-decimal list-inside text-stone-600 space-y-1 pl-2">
+                                <li>Bao gồm một phần "local part", ký tự <code>@</code>, và một phần "domain part".</li>
+                                <li>Local part:
+                                    <ul class="list-circle list-inside ml-4 space-y-1 pl-2">
+                                        <li>Có thể chứa chữ cái (a-z, A-Z), số (0-9), dấu chấm (<code>.</code>), dấu gạch dưới (<code>_</code>), dấu cộng (<code>+</code>), dấu gạch nối (<code>-</code>).</li>
+                                        <li>Dấu chấm (<code>.</code>) không được xuất hiện ở đầu hoặc cuối, và không được xuất hiện liên tiếp (ví dụ: <code>user..name</code> là không hợp lệ).</li>
+                                        <li>Phải có ít nhất 1 ký tự.</li>
+                                    </ul>
+                                </li>
+                                <li>Domain part:
+                                    <ul class="list-circle list-inside ml-4 space-y-1 pl-2">
+                                        <li>Bao gồm một hoặc nhiều tên miền con, cách nhau bởi dấu chấm (<code>.</code>).</li>
+                                        <li>Mỗi tên miền con chỉ chứa chữ cái (a-z, A-Z), số (0-9), và dấu gạch nối (<code>-</code>).</li>
+                                        <li>Dấu gạch nối (<code>-</code>) không được ở đầu hoặc cuối của một tên miền con.</li>
+                                        <li>Tên miền cấp cao nhất (ví dụ: <code>com</code>, <code>vn</code>, <code>org</code>) phải có ít nhất 2 chữ cái. Các tên miền con khác cũng phải có ít nhất 1 ký tự.</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                            <p class="text-stone-600 mt-1">Bạn hãy viết chương trình sử dụng biểu thức chính quy (regex) để kiểm tra xem một chuỗi có phải là địa chỉ email hợp lệ theo các quy tắc trên hay không.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Định dạng đầu vào</h3>
+                            <ul class="list-disc list-inside text-stone-600 space-y-1 pl-2">
+                                <li>Dòng đầu tiên chứa số nguyên <code>T</code>, là số lượng địa chỉ email cần kiểm tra.</li>
+                                <li><code>T</code> dòng tiếp theo, mỗi dòng chứa một chuỗi địa chỉ email.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Điều kiện</h3>
+                            <ul class="list-disc list-inside text-stone-600 space-y-1 pl-2">
+                                <li><code>1 ≤ T ≤ 100</code></li>
+                                <li>Độ dài mỗi chuỗi email từ 3 đến 254 ký tự.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Định dạng đầu ra</h3>
+                            <p class="text-stone-600">Đối với mỗi địa chỉ email, hiển thị <code>Hợp lệ</code> hoặc <code>Không hợp lệ</code>.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-stone-700 mb-1">Ví dụ</h3>
+                            <p class="text-stone-600 mb-1"><em>Đầu vào:</em></p>
+                            <pre class="bg-stone-200 p-3 rounded-md overflow-x-auto text-sm"><code class="language-text">7
+user.name@example.com
+user_name+label@example.co.uk
+.username@example.com
+username@.example.com
+user..name@example.com
+username@-example.com
+username@example.c</code></pre>
+                            <p class="text-stone-600 mt-2 mb-1"><em>Đầu ra:</em></p>
+                            <pre class="bg-stone-200 p-3 rounded-md overflow-x-auto text-sm"><code class="language-text">Hợp lệ
+Hợp lệ
+Không hợp lệ
+Không hợp lệ
+Không hợp lệ
+Không hợp lệ
+Không hợp lệ</code></pre>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        const navigationElement = document.getElementById('exerciseNavigation').querySelector('ul');
+        const contentElement = document.getElementById('exerciseContent');
+        let currentActiveTab = null;
+
+        function displayExercise(exerciseId) {
+            const exercise = exercises.find(ex => ex.id === exerciseId);
+            if (exercise) {
+                contentElement.innerHTML = exercise.content;
+                
+                const newActiveTab = navigationElement.querySelector(`button[data-id="${exerciseId}"]`);
+                if (currentActiveTab) {
+                    currentActiveTab.classList.remove('bg-teal-600', 'text-white', 'border-teal-600', 'tab-active', 'font-semibold');
+                    currentActiveTab.classList.add('bg-stone-200', 'text-stone-700', 'hover:bg-stone-300', 'border-transparent');
+                }
+                if (newActiveTab) {
+                    newActiveTab.classList.add('bg-teal-600', 'text-white', 'border-teal-600', 'tab-active', 'font-semibold');
+                    newActiveTab.classList.remove('bg-stone-200', 'text-stone-700', 'hover:bg-stone-300', 'border-transparent');
+                    currentActiveTab = newActiveTab;
+                }
+                contentElement.scrollTop = 0; 
+            } else {
+                contentElement.innerHTML = '<p class="text-center text-stone-500">Không tìm thấy bài tập. Vui lòng chọn lại.</p>';
+            }
+        }
+
+        exercises.forEach((exercise, index) => {
+            const listItem = document.createElement('li');
+            const button = document.createElement('button');
+            button.textContent = `Bài ${index + 1}`;
+            button.setAttribute('data-id', exercise.id);
+            button.className = 'px-3 py-2 sm:px-4 sm:py-2.5 text-sm sm:text-base rounded-md transition-colors duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50 border-b-2 border-transparent';
+            button.classList.add('bg-stone-200', 'text-stone-700', 'hover:bg-stone-300');
+            
+            button.addEventListener('click', () => {
+                displayExercise(exercise.id);
+            });
+            listItem.appendChild(button);
+            navigationElement.appendChild(listItem);
+        });
+
+        if (exercises.length > 0) {
+            displayExercise(exercises[0].id);
+        }
+
+    </script>
+</body>
+</html>
